@@ -50,7 +50,7 @@ path="E:\dob\GussfehlerKI"
 #### run02: erster durchlauf für videopräsi
 ### run 03: voschlag: gridsearch von colsample tree/node/level (lower) subsample (lower), max depth (lower) gamma (higher) eta (lower) minchildweight (larger). early stopping drastisch reduziert auf 10
 
-runname="run04"
+runname="run05"
 #folderexplanation="NIO_default"
 #folderexplanation="NIO_default_hypopt"
 #folderexplanation="NIO_hypopt_fe"
@@ -60,7 +60,7 @@ runname="run04"
 #folderexplanation="Defects_hypopt"
 #folderexplanation="Defects_hypopt_fe"
 #folderexplanation="Defects_hypopt_tsfresh"
-folderexplanation="baseline_NIOIO"
+folderexplanation="all_diss"
 
 #folderexplanation="Defects_hypopt_koknest"
 #folderexplanation="Defects_hypopt_fe_koknest"
@@ -102,7 +102,7 @@ nest_tsfresh_trigger = True
 
 
 targeterrors=["Gasblase","undicht","Poros",["Gasblase","Kaltlauf","undicht","Poros"],"Kaltlauf"] #targeterrors=["Gasblase","Kaltlauf","Kernfehler","Lunker","undicht","Poros","Prozessfehler","Sonstiges"]
-targeterrors=targeterrors[3:4]
+targeterrors=targeterrors[0:4]
 
 
 
@@ -120,17 +120,17 @@ XGB_objective=["binary:logistic"] #O1:log (objective, eta:0.1783)  #XGB_objectiv
 XGB_seed=[randomseed]
 XGB_verbosity=[0]
 
-XGB_eta=[0.3] #O1:0.1 (objective, eta: 0.1783) #XGB_eta=[0.05,0.1,0.2,0.3] #O1:0.1 (objective, eta: 0.1783)
+XGB_eta=[0.1,0.3,0.5] #O1:0.1 (objective, eta: 0.1783) #XGB_eta=[0.05,0.1,0.2,0.3] #O1:0.1 (objective, eta: 0.1783)
 XGB_alpha=[0.0005]  #XGB_alpha=[0,0.25,0.5,1.0,2.0]
 XGB_gamma=[0.0005]  #XGB_gamma=[0.01,0.05,0.1,0.2,0.3,1.0,2.0,5.0,10]
 XGB_lambda=[1]  #XGB_lambda=[1,2,4,8]
-XGB_minchild_weight=[1]   #XGB_minchild_weight=[0.01,0.05,0.1,0.2,0.3,1.0,2.0,5.0,10]
-XGB_max_delta_step=[0]  #XGB_max_delta_step=[0.5,1,2,4,8,16]
+XGB_minchild_weight=[0.1,0.5,1,2]   #XGB_minchild_weight=[0.01,0.05,0.1,0.2,0.3,1.0,2.0,5.0,10]
+XGB_max_delta_step=[0,0.5,1]  #XGB_max_delta_step=[0.5,1,2,4,8,16]
 
 XGB_n_estimators=[5000] #500
 XGB_earlystoppingrounds=[500]
-XGB_parallel_tree=[1]  #XGB_parallel_tree=[2,4,6,8,10,50]
-XGB_maxdepth=[4] #XGB_maxdepth=[2,3,4,5,6,7,8,9,10,16,32]
+XGB_parallel_tree=[1,2,4,8]  #XGB_parallel_tree=[2,4,6,8,10,50]
+XGB_maxdepth=[1,2,4,8] #XGB_maxdepth=[2,3,4,5,6,7,8,9,10,16,32]if type
 
 XGB_subsample=[0.75]   #XGB_subsample=[0.25,0.5,0.75,1.0]
 XGB_colsample_bytree=[0.75]    #XGB_colsample_bytree=[0.25,0.5,0.75,1.0]
@@ -150,15 +150,21 @@ NN_verbose=[True]
 #    "10x5","20x10","30x15","40x20","50x25","100x50","200x100","400x200","800x400",
 #    "10x10x5","20x20x10","30x30x15","40x40x20","50x50x25","100x100x50","200x200x100","400x400x200","800x800x400"
 #    ]
-NN_layers=[(100,100)]    
-NN_layers_names=["100x100"]
+NN_layers=[(2,2),(10,10),(50,50),(250,250),
+           (2,2,2),(10,10,10),(50,50,50),(250,250,250),
+           (1,2),(2,10),(10,50),(50,250),
+           (1,2,2),(2,10,10),(10,50,50),(50,250,250)]    
+NN_layers_names=["2x2","10x10","50x50","250x250",
+           "2x2x2","10x10x10","50x50x50","250x250x250",
+           "1x2","2x10","10x50","50x250"
+           "1x2x2","2x10x10","10x50x50","50x250x250"]
 NN_activation=["relu"] #default='relu'
 NN_solver=["adam"] #default='adam'
 NN_alpha=[0.0005] # default=0.0001
 #NN_batch_size=["auto"] # default='auto' # Ersetzt durch eine primzahlenberechnung, um 
 NN_minibatch_size = [32] # integer, not a list! wird zur Berechnung der genauen minibatchgröße benutzt, um eine möglichst ideale Teilung zu ermöglichen
 NN_learning_rate=["constant"] #default='constant'
-NN_learning_rate_init=[0.0001] #default=0.001 ### 0.00001,0.001
+NN_learning_rate_init=[0.00001,0.0001,0.001] #default=0.001 ### 0.00001,0.001
 
 NN_early_stopping=[True]
 NN_tol=[0.00001] #default 1e-4
@@ -367,7 +373,7 @@ for targeterror in targeterrors:
             #targeterrors=targeterrors[:-1]
             #rename all y values that isin targeterrors[targetnumbers] in NIO
             if type(targeterror)==list:
-                data["FEHLERART_BEZ"].replace(targeterrors[0],"NIO",inplace=True)
+                data["FEHLERART_BEZ"].replace(targeterror,"NIO",inplace=True)
                 keeplist=["NIO"]       
             else:
                 keeplist=[targeterror]
