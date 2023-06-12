@@ -1,0 +1,1 @@
+Dieses Repoistorium enthält den Code für die in der Dissertation "Stufenmodell mit iterativer Implementierungsmethode für KI-Anwendungen in der Qualitätssicherung des Gießereiwesens" vorgestellte Anwendung zur Erkennung von Gussfehlern. Die Daten sind auf Anfrage vom Author zu erhalten.
